@@ -20,6 +20,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <form id="login-form" action="/entry" method="post" role="form" style="display: block;">
+                                <input type="hidden" value="login" name="action">
                                 <div class="form-group">
                                     <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
                                 </div>
@@ -38,7 +39,8 @@
                                     </div>
                                 </div>
                             </form>
-                            <form id="register-form" action="/entry" method="post" role="form" style="display: none;">
+                            <form id="register-form" action="/entry" method="post" role="form" style="display: none;" enctype="multipart/form-data">
+                                <input type="hidden" value="register" name="action">
                                 <div class="form-group">
                                     <input type="text" name="course" id="course" tabindex="1" class="form-control" placeholder="Course code" value="">
                                 </div>
@@ -124,7 +126,10 @@
         $('form[id="login-form"]').validate({
             rules: {
                 username: 'required',
-                password: 'required',
+                password: {
+                    required: true,
+
+                },
             },
             messages: {
                 username: 'This field is required',

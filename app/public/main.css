@@ -123,3 +123,39 @@ body {
     overflow: hidden;
     position: relative;
 }
+/*for the success and error
+ */
+.suu{padding-top: 1em;
+    font-weight: bold;
+    font-family: midesign;
+    font-size: 3em;
+    color: whitesmoke;
+    text-shadow: 3px 3px 4px lightskyblue;
+
+}
+.sucHome{
+    font-family: midesign;
+    font-size: 3em;
+    text-decoration: none;
+    padding: 0.1em 4em;
+    background-color:lightskyblue;
+    color: white;
+
+
+}
+.head3{
+    text-align: center;
+    margin-top: 6em;
+    background-color: #2D2E34;
+    height: 25em;
+    width: 35em;
+    margin-left: 23em;
+    border-radius: 1em;
+    box-shadow: 13px 13px 7px grey;
+}
+.mes{
+    font-weight: bold;
+    font-family: midesign;
+    font-size: 1em;
+    color: navajowhite;
+}
