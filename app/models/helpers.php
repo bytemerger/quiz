@@ -38,6 +38,24 @@ class helpers
 
     public static function importCsv($file,$table)
     {
+        $conn= new dbconnect();
+        if(helpers::checkTable('questions')) {
+            $sql="DROP TABLE questions";
+            $conn->db->exec($sql);
+        }
+        $sql="CREATE TABLE  questions (
+                id int NOT NULL AUTO_INCREMENT,
+                question  TEXT,
+                answer1 varchar(255),
+                answer2 varchar(255),
+                answer3 varchar(255),
+                answer4 varchar(255),
+                ans varchar(255),
+                PRIMARY KEY (id)
+                  )";
+
+        $conn->db->exec($sql);
+
         $filename=$file['tmp_name'];
         if($file["size"] > 0)
         {
@@ -46,7 +64,7 @@ class helpers
             //$tableColumns="";
             while (($getData = fgetcsv($csv, 10000, ",")) !== FALSE)
             {
-                // this is to escape the header and use it as the db table columns
+                 /*//this is to escape the header and use it as the db table columns
                 if($check)
                 {
                     $check=false;
@@ -56,18 +74,21 @@ class helpers
                 //get column names
                 $columns=implode(",",$tableColumns);
 
+                */
                 //get table values
                 //$values = '"' . implode('", "', $getData) . '"';
                 $values = $getData;
                 /*the prepare statement
                 $prep=':' . implode(', :', $tableColumns) ;
                 */
-                $place_holders = implode(',', array_fill(0, count($tableColumns), '?'));
+                $place_holders = implode(',', array_fill(0, 6, '?'));
 
-                echo $place_holders,$columns;
-                $conn= new dbconnect();
+                echo $place_holders;
+
+                //create a new question table
+
                 try {
-                    $sql = "INSERT into $table (".$columns.") values (".$place_holders.")";
+                    $sql = "INSERT into $table (question, answer1, answer2, answer3, answer4, ans) values (".$place_holders.")";
                     $st=$conn->db->prepare($sql);
                     $st->execute($values);
                 }
