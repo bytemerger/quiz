@@ -8,7 +8,7 @@
 
 namespace App\controllers;
 use App\models\quiz;
-
+use App\models\helpers;
 session_start();
 class write
 {
@@ -23,7 +23,17 @@ class write
 
         }
     }
-
+    public function proceed($id)
+    {
+        if(!helpers::checkTable($id)){
+         $result=$this->getQuestion($id,'1');
+        }
+        else{
+            $this->randomQuestion($id);
+            $result=$this->getQuestion($id,'1');
+        }
+        return $result;
+    }
     public function randomQuestion($id)
     {
         //shuffle and create new table questions
@@ -37,7 +47,7 @@ class write
     {
         //at request get the current question from personalised
         // question database
-        quiz::getQuestion($id,$question);
+        return quiz::getQuestion($id,$question);
     }
 
     public function timeCount()
