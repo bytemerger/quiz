@@ -9,11 +9,19 @@
 namespace App\controllers;
 use App\models\quiz;
 
+session_start();
 class write
 {
     public function __construct()
     {
+        $id = $_SESSION["student_id"];
+        switch ($_POST["action"])
+        {
+            case 'start': $this->randomQuestion($id);
+            break;
+            case 'getQuestion': $this->getQuestion($_POST["id"],$_POST["question"]);
 
+        }
     }
 
     public function randomQuestion($id)
