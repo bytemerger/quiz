@@ -15,6 +15,7 @@ class write
     public function __construct()
     {
         $id = $_SESSION["student_id"];
+        $id= str_replace(substr($id, 4, 1), '', $id);
         switch ($_POST["action"])
         {
             case 'start': $this->randomQuestion($id);
@@ -25,14 +26,16 @@ class write
     }
     public function proceed($id)
     {
+        $id= str_replace(substr($id, 4, 1), '', $id);
         if(!helpers::checkTable($id)){
-         $result=$this->getQuestion($id,'1');
-        }
-        else{
             $this->randomQuestion($id);
             $result=$this->getQuestion($id,'1');
+            return $result;
         }
-        return $result;
+        elseif(helpers::checkTable($id)){
+            $result=$this->getQuestion($id,'1');
+            return $result;
+        }
     }
     public function randomQuestion($id)
     {
