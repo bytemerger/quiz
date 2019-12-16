@@ -13,28 +13,26 @@ use App\db\dbconnect;
 class quiz
 {
     protected static $conn;
-    public function __construct()
-    {
-       self::$conn = new dbconnect();
-    }
 
     public static function setPersonalisedQuestions($id)
-    {
+    {   self::$conn = new dbconnect();
         //creates a table like the main questions table and randomizes the questions....
-       $sql= "CREATE TABLE :id LIKE questions; INSERT INTO :id (question, answer1, answer2, answer3, answer4, ans) SELECT id, question, answer1, answer2, answer3, answer4, ans FROM questions ORDER BY RAND();
-              ALTER TABLE :id
+       $sql= "CREATE TABLE `:id` LIKE questions;
+              INSERT INTO `:id` (question, answer1, answer2, answer3, answer4, ans) SELECT question, answer1, answer2, answer3, answer4, ans FROM questions ORDER BY RAND();
+              ALTER TABLE `:id`
               ADD COLUMN s_ans VARCHAR(255) AFTER ans";
        $stmt= self::$conn->db->prepare($sql);
-       $stmt->execute([":id"=> $id]);
+       $stmt->bindValue(":id",$id,\PDO::PARAM_INT);
+       $stmt->execute();
 
     }
 
 
     public static function getQuestion($id,$question)
-    {
-        $sql="SELECT question, answer1, answer2, answer3, answer4, ans, s_ans from :id where id = :question ";
+    {   self::$conn = new dbconnect();
+        $sql="SELECT question, answer1, answer2, answer3, answer4, ans, s_ans from `:id` where id = :question ";
         $stmt= self::$conn->db->prepare($sql);
-        $stmt->bindValue(":id",$id);
+        $stmt->bindValue(":id",$id,\PDO::PARAM_INT);
         $stmt->bindValue(":question",$question);
         $stmt->execute();
         $result=$stmt->fetch(\PDO::FETCH_ASSOC);
