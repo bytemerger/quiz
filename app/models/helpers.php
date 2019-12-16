@@ -12,29 +12,23 @@ use App\db\dbconnect;
 
 class helpers
 {
-    /**
-     * Check if a table exists in the current database.
-     *
-     * @param string $table Table to search for.
-     * @return bool TRUE if table exists, FALSE if no table found.
-     */
+
     public static function checkTable($table)
     {
-
-        // Try a select statement against the table
-        // Run it in try/catch in case PDO is in ERRMODE_EXCEPTION.
+        global $a;
         $conn= new dbconnect();
+        $conn->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         try {
-            $result = $conn->db->query("SELECT 1 FROM $table LIMIT 1");
+            $result = $conn->db->query("SELECT 1 FROM `$table` LIMIT 1");
         } catch (\Exception $e) {
             // We got an exception == table not found
-            return FALSE;
+            $a= $e->getMessage();
+
         }
-
-        // Result is either boolean FALSE (no table found) or PDOStatement Object (table found)
-        return $result !== FALSE;
+        if(!$a)
+            return TRUE;
+        else return false;
     }
-
 
     public static function importCsv($file,$table)
     {
