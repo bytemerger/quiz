@@ -52,5 +52,28 @@ class quiz
 
     }
 
+    public static function totalNofRows($table)
+    {
+        $sql="SELECT COUNT(*) from `:table`";
+        self::$conn = new dbconnect();
+        $st = self::$conn->db->prepare($sql);
+        $st->bindValue(':table',$table,\PDO::PARAM_INT);
+        $st->execute();
+        //$st->rowCount();
+        $row = $st->fetchColumn();
+        return $row;
+    }
+
+    public static function answeredQuestion($student)
+    {
+        $sql="SELECT id, s_ans from `:student`";
+        self::$conn = new dbconnect();
+        $stm= self::$conn->db->prepare($sql);
+        $stm->bindValue(':student',$student,\PDO::PARAM_INT);
+        $stm->execute();
+        $result = $stm->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $result;
+    }
 
 }
