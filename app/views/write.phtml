@@ -6,7 +6,7 @@
                 <img src="/app/public/img/avate.jpg" height="150" width="150">
             </div>
             <h4>
-                Show us what you got <? ?>
+                Show us what you got <?php $this->result['id']; ?>
             </h4>
             <div>
                 <div id="del-countdown">
@@ -20,11 +20,12 @@
         </div>
         <div class="col-md-8">
             <div>
-                Question NO.<?// print
-                var_dump($this->result) ?>
+                <?php  print
+                print_r($this->result);
+                ?>
             </div>
             <div class="space">
-                <? //question ?>
+                <?php echo $this->result['question'] ?>
             </div>
             <div>
                 <form>
@@ -51,16 +52,36 @@
                     <button>next ></button>
                 </div>
                 <div class="col-md-6">
-                    <button>previous <</button>
+                    <button onclick="getAnswered()">previous <</button>
                 </div>
             </div>
-            <div class="space">
-                <button class="active">1</button><button>2</button><button>3</button><button>4</button>
-                <button>5</button><button>6</button><button>7</button><button>8</button><button>9</button>
-                <button>10</button><button>11</button><button>12</button><button>13</button><button>14</button>
-                <button>15</button><button>16</button><button>17</button><button>18</button><button>19</button><button>20</button>
-
+            <div class="space" id="quesNo">
             </div>
         </div>
     </div>
 </div>
+<script>
+    function getAnswered()
+    {
+        let xhttp;
+        xhttp = new XMLHttpRequest();
+        var data = JSON.stringify({
+            action:"answered"
+        });
+        xhttp.open("POST","/write");
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.responseType = 'json';
+        xhttp.onload = function () {
+            let response = xhttp.response;
+            response.forEach(element => {
+                result=document.getElementById('quesNo');
+                if(response.s_ans == null)
+                    result.innerHTML += '<button>'+element.id+'</button>';
+                else
+                    result.innerHTML += '<button class="active">'+element.id+'</button>';
+            });
+            console.log(response[1]);
+        };
+        xhttp.send(data);
+    }
+</script>
