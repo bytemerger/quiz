@@ -27,7 +27,7 @@ $klein->respond('GET','/write',function($request, $response, $service){
 });
 $klein->respond('POST', '/write', function ($request, $response,$service){
    $write= new write();
-   $service->render('app/views/write.phtml');});
+   });
 
 $klein->dispatch();
 ?>
