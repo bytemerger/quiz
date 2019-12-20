@@ -12,15 +12,17 @@ use App\models\helpers;
 session_start();
 class write
 {
+
     public function __construct()
     {
-        $id = $_SESSION["student_id"];
-        $id= str_replace(substr($id, 4, 1), '', $id);
-        switch ($_POST["action"])
+        $input=json_decode(file_get_contents('php://input'),true);
+        switch ($input['action'])
         {
-            case 'start': $this->randomQuestion($id);
+            case 'start': $this->randomQuestion($this->id);
             break;
-            case 'getQuestion': $this->getQuestion($_POST["id"],$_POST["question"]);
+            case 'getQuestion': $this->getQuestion($_SESSION['student_id'],$input["question"]);
+            break;
+            case 'answered' : $this->getAnsweredQuestion($_SESSION['student_id']);
 
         }
     }
@@ -52,7 +54,14 @@ class write
         // question database
         return quiz::getQuestion($id,$question);
     }
+    public function getAnsweredQuestion($id)
+    {
+        $id= str_replace(substr($id, 4, 1), '', $id);
+        //$result['rows'] = quiz::totalNofRows($id);
+        $result = quiz::answeredQuestion($id);
 
+        echo json_encode($result);
+    }
     public function timeCount()
     {
         //save time count to database
