@@ -6,7 +6,7 @@
                 <img src="/app/public/img/avate.jpg" height="150" width="150">
             </div>
             <h4>
-                Show us what you got <?php $this->result['id']; ?>
+                Show us what you got <?php $this->id; ?>
             </h4>
             <div>
                 <div id="del-countdown">
@@ -19,48 +19,32 @@
             </div>
         </div>
         <div class="col-md-8">
-            <div>
-                <?php  print
-                print_r($this->result);
-                ?>
-            </div>
-            <div class="space">
-                <?php echo $this->result['question'] ?>
+            <div class="space" id="question">
             </div>
             <div>
                 <form>
-                    <div class="row">
-                        <div class="radio col-md-6">
-                            <label><input type="radio" name="answer" checked>Option 1</label>
-                        </div>
-                        <div class="radio col-md-6">
-                            <label><input type="radio" name="answer">Option 2</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="radio col-md-6">
-                            <label><input type="radio" name="answer" >Option 3</label>
-                        </div>
-                        <div class="radio col-md-6">
-                            <label><input type="radio" name="answer" >Option 3</label>
-                        </div>
+                    <div class="row" id="answers">
+
                     </div>
                 </form>
             </div>
             <div class="space">
+                <input name="questionNo" type="text" id="NO" hidden>
                 <div class="col-md-6">
-                    <button>next ></button>
+                    <button onclick="getNext(document.getElementById('NO').value-1)">previous <</button>
                 </div>
                 <div class="col-md-6">
-                    <button onclick="getAnswered()">previous <</button>
+                    <button onclick="getNext(parseInt(document.getElementById('NO').value) +1)">next ></button>
                 </div>
             </div>
+            <div class="space"><hr></div>
             <div class="space" id="quesNo">
             </div>
         </div>
     </div>
 </div>
 <script>
+    window.onload(getAnswered(),getNext(1));
     function getAnswered()
     {
         let xhttp;
@@ -76,12 +60,58 @@
             response.forEach(element => {
                 result=document.getElementById('quesNo');
                 if(response.s_ans == null)
-                    result.innerHTML += '<button>'+element.id+'</button>';
+                    result.innerHTML += '<button onclick="getNext('+element.id+')">'+element.id+'</button>';
                 else
-                    result.innerHTML += '<button class="active">'+element.id+'</button>';
+                    result.innerHTML += '<button onclick="getNext('+element.id+')">'+element.id+'</button>';
             });
             console.log(response[1]);
         };
         xhttp.send(data);
+    }
+    function getNext(id)
+    {
+        let xhtp = new XMLHttpRequest();
+        var data = JSON.stringify({
+            action:"getQuestion",
+            question: id
+        });
+        xhtp.open('POST','/write');
+        xhtp.setRequestHeader('Content-type', 'application/json');
+        xhtp.responseType = 'json';
+        xhtp.onload = function () {
+            let response = xhtp.response;
+
+            //remove answer to the question
+            delete response.ans;
+
+            document.getElementById('question').innerHTML=response.question;
+
+            //remove the question from the object
+            delete response.question;
+
+            //convert the remaining part of object to array
+            const answers = Object.keys(response).map(i => response[i]);
+            console.log(answers);
+
+            answer=document.getElementById('answers');
+
+            answer.innerHTML='';
+            for (let i =0; i<answers.length-1; i++) {
+
+                answer.innerHTML +='<div class="radio">';
+                if (answers[i] === answers[answers.length]){
+                    answer.innerHTML +='<label><input type="radio" name="answer" checked>'+answers[i]+'</label>';
+                }
+                else{
+                    answer.innerHTML +='<label><input type="radio" name="answer">'+ answers[i] +'</label>';
+                }
+                answer.innerHTML +='</div>';
+            }
+
+            document.getElementById('NO').value = id;
+
+            //console.log(response);
+        };
+        xhtp.send(data);
     }
 </script>
