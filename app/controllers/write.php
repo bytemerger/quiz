@@ -12,7 +12,8 @@ use App\models\helpers;
 session_start();
 class write
 {
-
+    /*
+     * The construct gets the action to be taken from the request sent */
     public function __construct()
     {
         $input=json_decode(file_get_contents('php://input'),true);
@@ -20,12 +21,14 @@ class write
         {
             case 'start': $this->randomQuestion($this->id);
             break;
-            case 'getQuestion': $this->getQuestion($_SESSION['student_id'],$input["question"]);
+            case 'getQuestion': $this->getQuestion($_SESSION['student_id'],$input["question"],'xml');
             break;
             case 'answered' : $this->getAnsweredQuestion($_SESSION['student_id']);
 
         }
     }
+    /*
+     * this is used for the get request (learning purposes)*/
     public function proceed($id)
     {
         $id= str_replace(substr($id, 4, 1), '', $id);
@@ -39,6 +42,7 @@ class write
             return $result;
         }
     }
+    //creates and randomizes the records of a particular table to make it unique
     public function randomQuestion($id)
     {
         //shuffle and create new table questions
@@ -47,13 +51,23 @@ class write
 
 
     }
-
-    public function getQuestion($id,$question)
+    /*function to get question the $requesType argument is for learning
+    to allow for two different request to access the same function(xmlhttprequest and normal get request
+    */
+    public function getQuestion($id,$question,$requesType='normal')
     {
         //at request get the current question from personalised
         // question database
-        return quiz::getQuestion($id,$question);
+        if ($requesType == 'xml'){
+            $id= str_replace(substr($id, 4, 1), '', $id);
+            $result=quiz::getQuestion($id,$question);
+            echo json_encode($result);
+        }
+        else
+            return quiz::getQuestion($id,$question);
     }
+    /*
+     * get the questions numbers used to check if a question has been answered*/
     public function getAnsweredQuestion($id)
     {
         $id= str_replace(substr($id, 4, 1), '', $id);
