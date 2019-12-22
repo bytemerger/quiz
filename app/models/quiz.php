@@ -42,11 +42,12 @@ class quiz
 
     public static function answerQuestion($user, $question, $ans)
     {
-        $sql="UPDATE :user SET s_ans=:ans WHERE id = :id";
+        self::$conn = new dbconnect();
+        $sql="UPDATE `:user` SET s_ans =:ans WHERE id = :id";
         $st = self::$conn->db->prepare($sql);
         $st->bindValue(":id", $question);
         $st->bindValue(":ans",$ans);
-        $st->bindValue(":user",$user);
+        $st->bindValue(":user",$user,\PDO::PARAM_INT);
         $st->execute();
 
 

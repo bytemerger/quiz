@@ -24,6 +24,8 @@ class write
             case 'getQuestion': $this->getQuestion($_SESSION['student_id'],$input["question"],'xml');
             break;
             case 'answered' : $this->getAnsweredQuestion($_SESSION['student_id']);
+            break;
+            case 'answerQ': $this->sendAnswer($_SESSION['student_id'],$input);
 
         }
     }
@@ -34,12 +36,10 @@ class write
         $id= str_replace(substr($id, 4, 1), '', $id);
         if(!helpers::checkTable($id)){
             $this->randomQuestion($id);
-            $result=$this->getQuestion($id,'1');
-            return $result;
+
         }
         elseif(helpers::checkTable($id)){
-            $result=$this->getQuestion($id,'1');
-            return $result;
+            //get time and other info...
         }
     }
     //creates and randomizes the records of a particular table to make it unique
@@ -81,10 +81,10 @@ class write
         //save time count to database
 
     }
-    public function sendAnswer()
-    {
-        //check if answer is coorect
-        //add to score and make question as answered
+    public function sendAnswer($student,$input)
+    {   $student= str_replace(substr($student, 4, 1), '', $student);
+
+        quiz::answerQuestion($student,$input['question'],$input['answer']);
     }
     public function submit()
     {
