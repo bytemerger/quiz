@@ -36,10 +36,11 @@ class write
         $id= str_replace(substr($id, 4, 1), '', $id);
         if(!helpers::checkTable($id)){
             $this->randomQuestion($id);
-
+            return $_SESSION['student_id'];
         }
         elseif(helpers::checkTable($id)){
             //get time and other info...
+            return $_SESSION['student_id'];
         }
     }
     //creates and randomizes the records of a particular table to make it unique
