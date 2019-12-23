@@ -30,11 +30,12 @@
             </div>
             <div class="space">
                 <input name="questionNo" type="text" id="NO" hidden>
+                <input name="o" type="text" id="totalQ" hidden>
                 <div class="col-md-6">
-                    <button onclick="getNext(document.getElementById('NO').value-1)">previous <</button>
+                    <button onclick="getNext(document.getElementById('NO').value-1 ===0 ? 1 : parseInt(document.getElementById('NO').value)-1)">previous <</button>
                 </div>
                 <div class="col-md-6">
-                    <button onclick="getNext(parseInt(document.getElementById('NO').value) +1)">next ></button>
+                    <button onclick="getNext(document.getElementById('NO').value === document.getElementById('totalQ').value ? document.getElementById('NO').value : parseInt(document.getElementById('NO').value) +1 )">next ></button>
                 </div>
             </div>
             <div class="space"><hr></div>
@@ -55,16 +56,20 @@
         xhttp.open("POST","/write");
         xhttp.setRequestHeader('Content-type', 'application/json');
         xhttp.responseType = 'json';
+        result=document.getElementById('quesNo');
+        result.innerHTML='';
         xhttp.onload = function () {
             let response = xhttp.response;
+
+            rows=response.length;
             response.forEach(element => {
-                result=document.getElementById('quesNo');
-                if(response.s_ans == null)
-                    result.innerHTML += '<button onclick="getNext('+element.id+')">'+element.id+'</button>';
+
+                if(element.s_ans !== null)
+                    result.innerHTML += '<button onclick="getNext('+element.id+')" class="active">'+element.id+'</button>';
                 else
-                    result.innerHTML += '<button onclick="getNext('+element.id+')">'+element.id+'</button>';
+                    result.innerHTML += '<button onclick="getNext('+element.id+');getAnswered()">'+element.id+'</button>';
             });
-            console.log(response[1]);
+            document.getElementById('totalQ').value = rows;
         };
         xhttp.send(data);
     }
@@ -99,11 +104,11 @@
             for (let i =0; i<answers.length-1; i++) {
 
                 answer.innerHTML +='<div class="radio">';
-                if (answers[i] === answers[answers.length]){
-                    answer.innerHTML +='<label><input type="radio" name="answer" checked>'+answers[i]+'</label>';
+                if (answers[i] === answers[answers.length-1]){
+                    answer.innerHTML +='<label><input type="radio" name="answer" value="'+answers[i]+'" checked>'+answers[i]+'</label>';
                 }
                 else{
-                    answer.innerHTML +='<label><input type="radio" name="answer">'+ answers[i] +'</label>';
+                    answer.innerHTML +='<label><input type="radio" name="answer" value="'+answers[i]+'" onclick="answerQuestion('+id+')">'+ answers[i] +'</label>';
                 }
                 answer.innerHTML +='</div>';
             }
@@ -113,5 +118,35 @@
             //console.log(response);
         };
         xhtp.send(data);
+    }
+    function answerQuestion(id) {
+        let xhttp;
+        xhttp = new XMLHttpRequest();
+        let radios = document.getElementsByName('answer');
+
+        let s_ans;
+        for (var i = 0, length = radios.length; i < length; i++)
+        {
+            if (radios[i].checked)
+            {
+                s_ans = radios[i].value;
+                console.log(s_ans);
+            }
+        }
+
+        var data = JSON.stringify({
+            action:"answerQ",
+            answer:s_ans,
+            question: id
+        });
+        xhttp.open("POST","/write");
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        //xhttp.responseType = 'json';
+        xhttp.onload = function () {
+            let response = xhttp.response;
+            getAnswered();
+
+        };
+        xhttp.send(data);
     }
 </script>
