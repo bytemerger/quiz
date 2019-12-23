@@ -10,6 +10,7 @@ ini_set('display_errors', true);
 use App\controllers\entry;
 use App\db\seeder;
 use App\controllers\write;
+use App\controllers\watch;
 //call app configurations
 new App\config\config();
 
@@ -28,6 +29,9 @@ $klein->respond('GET','/write',function($request, $response, $service){
 $klein->respond('POST', '/write', function ($request, $response,$service){
    $write= new write();
    });
-
+$klein->respond('GET','/watch/[:course]',function ($request, $response,$service){
+   $watch = new watch();
+   $result=$watch->get($request->course);
+});
 $klein->dispatch();
 ?>
