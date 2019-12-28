@@ -1,9 +1,9 @@
 <?php include 'app/views/includes/header.phtml'?>
 <body>
 <div class="container">
-    <p>Are you ready for  <?php echo $this->course;?></p>
+    <p>Are you ready to start  <?php echo $this->course;?></p>
     <button class="btn peach-gradient">cancel</button>
-    <button class="btn purple-gradient" onclick="window.location.href='/write'">start</button>
+    <button class="btn purple-gradient" onclick="window.location.href='/write/'<?php echo $this->course;?>">start</button>
 </div>
 </body>
 </html>
