@@ -26,7 +26,7 @@ class entry
         {
             case 'login': $this->login($service);
             break;
-            case 'register': $this->register();
+            case 'register': $this->register($service);
         }
 
     }
@@ -51,7 +51,7 @@ class entry
     }
 
     //register an exam
-    public function register()
+    public function register($service)
     {
        $file=$_FILES['file'];
        $data=$_POST;
@@ -59,5 +59,6 @@ class entry
 
        $register->register($data,$file);
 
+       $service->render('app/views/examiner-start.phtml',array('course'=>$data['course']));
     }
 }
