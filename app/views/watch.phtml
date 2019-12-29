@@ -1,0 +1,31 @@
+<?php include 'app/views/includes/header.phtml'?>
+<button class="btn btn-danger">Stop</button>
+<div class="space"><br></div>
+<table>
+    <tr>
+        <th>Reg. No</th>
+        <th>Score</th>
+        <th>Time</th>
+    </tr>
+    <?php
+
+
+    foreach ($this->result as $result) {
+        echo '<tr>';
+        echo '<td>' . $result['stu_id'] . '</td>';
+        echo '<td>' . $result['score']. '</td>';
+
+
+        ?>
+        <td>
+            <?php echo $result['time']; ?>
+        </td>
+        <?php
+        echo '</tr>';
+    }
+
+    ?>
+</table>
+<script>
+
+</script>
