@@ -1,5 +1,5 @@
 <?php include 'app/views/includes/header.phtml'?>
-<button class="btn btn-danger">Stop</button>
+<button class="btn btn-danger" onclick="end(<?php echo $this->course ?>)">Stop</button>
 <div class="space"><br></div>
 <table>
     <tr>
@@ -27,5 +27,14 @@
     ?>
 </table>
 <script>
+    function end(course)
+    {
+        if (confirm("are you sure you want to end the exam")){
+        let xhttp = new XMLHttpRequest();
 
+        xhttp.open('DELETE','/watch/'+course);
+
+        xhttp.send();
+        }
+    }
 </script>
