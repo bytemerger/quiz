@@ -18,7 +18,7 @@ class watch
             $this->startExam($course);
         }
         elseif(helpers::checkTable($course)){
-            $this->getScores($course);
+            return $this->getScores($course);
         }
 
     }
@@ -30,7 +30,7 @@ class watch
 
     public function getScores($course)
     {
-
+       return record::getResult($course);
     }
 
     public function stopExam()
