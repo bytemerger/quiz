@@ -32,6 +32,7 @@ $klein->respond('POST', '/write', function ($request, $response,$service){
 $klein->respond('GET','/watch/[:course]',function ($request, $response,$service){
    $watch = new watch();
    $result=$watch->get($request->course);
+   $service->render('app/views/watch.phtml', array('result'=>$result));
 });
 $klein->dispatch();
 ?>
