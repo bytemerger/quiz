@@ -33,8 +33,9 @@ class watch
        return record::getResult($course);
     }
 
-    public function stopExam()
+    public function stopExam($course)
     {
+        record::stop($course);
 
     }
 }

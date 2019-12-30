@@ -37,4 +37,13 @@ class record
         $result = $st->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public static function stop($course)
+    {
+        self::$conn = new dbconnect();
+        $sql = "DROP TABLE `:course`";
+        $st = self::$conn->db->prepare($sql);
+        $st->bindValue(':course',$course,\PDO::PARAM_INT);
+        $st->execute();
+    }
 }
