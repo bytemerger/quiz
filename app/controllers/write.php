@@ -26,16 +26,18 @@ class write
             case 'answered' : $this->getAnsweredQuestion($_SESSION['student_id']);
             break;
             case 'answerQ': $this->sendAnswer($_SESSION['student_id'],$input);
+            break;
+            case 'getScore': $this->checkResult($_SESSION['student_id'],$input['course']);
 
         }
     }
     /*
      * this is used for the get request (learning purposes)*/
-    public function proceed($id)
+    public function proceed($id,$course)
     {
         $id= str_replace(substr($id, 4, 1), '', $id);
         if(!helpers::checkTable($id)){
-            $this->randomQuestion($id);
+            $this->randomQuestion($id,$course);
             return $_SESSION['student_id'];
         }
         elseif(helpers::checkTable($id)){
@@ -44,11 +46,11 @@ class write
         }
     }
     //creates and randomizes the records of a particular table to make it unique
-    public function randomQuestion($id)
+    public function randomQuestion($id,$course)
     {
         //shuffle and create new table questions
         // for the user with score and time
-        quiz::setPersonalisedQuestions($id);
+        quiz::setPersonalisedQuestions($id,$course);
 
 
     }
@@ -86,6 +88,23 @@ class write
     {   $student= str_replace(substr($student, 4, 1), '', $student);
 
         quiz::answerQuestion($student,$input['question'],$input['answer']);
+    }
+    public function checkResult($id,$course)
+    {
+        $id= str_replace(substr($id, 4, 1), '', $id);
+        $result = quiz::getScore($id);
+
+        $score =0;
+        foreach ($result as $res){
+            if ($res['ans']===$res['s_ans'])
+            {
+                $score = $score+2;
+            }
+        }
+
+        quiz::updateScore($id,$course,$score);
+
+
     }
     public function submit()
     {

@@ -99,7 +99,6 @@
 
             //convert the remaining part of object to array
             const answers = Object.keys(response).map(i => response[i]);
-            console.log(answers);
 
             answer=document.getElementById('answers');
 
@@ -108,7 +107,7 @@
 
                 answer.innerHTML +='<div class="radio">';
                 if (answers[i] === answers[answers.length-1]){
-                    answer.innerHTML +='<label><input type="radio" name="answer" value="'+answers[i]+'" checked>'+answers[i]+'</label>';
+                    answer.innerHTML +='<label><input type="radio" name="answer" value="'+answers[i]+'"  checked onclick="answerQuestion('+id+')">'+answers[i]+'</label>';
                 }
                 else{
                     answer.innerHTML +='<label><input type="radio" name="answer" value="'+answers[i]+'" onclick="answerQuestion('+id+')">'+ answers[i] +'</label>';
@@ -148,6 +147,26 @@
         xhttp.onload = function () {
             let response = xhttp.response;
             getAnswered();
+
+        };
+        xhttp.send(data);
+
+        checkAnswer();
+    }
+    function checkAnswer()
+    {
+        let xhttp;
+        xhttp = new XMLHttpRequest();
+
+        var data = JSON.stringify({
+            action:"getScore",
+            course:"<?php echo $this->course ?>"
+
+        });
+        xhttp.open("POST","/write");
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        //xhttp.responseType = 'json';
+        xhttp.onload = function () {
 
         };
         xhttp.send(data);

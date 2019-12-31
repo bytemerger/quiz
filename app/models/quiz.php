@@ -14,7 +14,7 @@ class quiz
 {
     protected static $conn;
 
-    public static function setPersonalisedQuestions($id)
+    public static function setPersonalisedQuestions($id,$course)
     {   self::$conn = new dbconnect();
         //creates a table like the main questions table and randomizes the questions....
        $sql= "CREATE TABLE `:id` LIKE questions;
@@ -24,6 +24,7 @@ class quiz
        $stmt= self::$conn->db->prepare($sql);
        $stmt->bindValue(":id",$id,\PDO::PARAM_INT);
        $stmt->execute();
+       self::createScore($course,$id);
 
     }
 
@@ -75,6 +76,42 @@ class quiz
         $result = $stm->fetchAll(\PDO::FETCH_ASSOC);
 
         return $result;
+    }
+
+    public static function getScore($student)
+    {
+        $sql="SELECT ans, s_ans from `:student`";
+        self::$conn = new dbconnect();
+        $stm= self::$conn->db->prepare($sql);
+        $stm->bindValue(':student',$student,\PDO::PARAM_INT);
+        $stm->execute();
+        $result = $stm->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
+    public static function createScore($course,$user)
+    {
+        $user= substr_replace($user,'/',4,0);
+
+        self::$conn = new dbconnect();
+        $sql="INSERT INTO `:course` (stu_id,score,time) VALUES (:id, 0,0)";
+        $st = self::$conn->db->prepare($sql);
+        $st->bindValue(":course",$course,\PDO::PARAM_INT);
+        $st->bindValue(":id",$user);
+        $st->execute();
+    }
+
+    public static function updateScore($user,$course,$score)
+    {
+        self::$conn = new dbconnect();
+        $sql="UPDATE `:course` SET score =:score WHERE stu_id = :id";
+        $st = self::$conn->db->prepare($sql);
+        $st->bindValue(":course",$course,\PDO::PARAM_INT);
+        $st->bindValue(":id",$user);
+        $st->bindValue(":score",$score);
+        $st->execute();
+
     }
 
 }
