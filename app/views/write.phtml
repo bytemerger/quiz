@@ -197,7 +197,7 @@
         xhttp.send(data);
     }
     function startTimer(duration) {
-        var timer = duration*60, minutes, seconds;
+        var timer = duration, minutes, seconds;
 
         setInterval(function () {
             minutes = parseInt(timer / 60,10);
@@ -219,7 +219,7 @@
 
             var data = JSON.stringify({
                 action:"saveTime",
-                time:minutes,
+                time:timer,
                 course:"<?php echo $this->course ?>"
 
             });
@@ -229,25 +229,27 @@
             xhttp.onload = function () {
             };
             xhttp.send(data);
-        },60000)
+        },1000)
     }
     function submit(){
-        clearInterval(updateTime)
-        let xhttp;
-        xhttp = new XMLHttpRequest();
+        if(confirm('are you sure you are done')) {
+            clearInterval(updateTime);
+            let xhttp;
+            xhttp = new XMLHttpRequest();
 
-        var data = JSON.stringify({
-            action:"submit",
-            time:-1,
-            course:"<?php echo $this->course ?>"
-        });
-        xhttp.open("POST","/write");
-        xhttp.setRequestHeader('Content-type', 'application/json');
-        xhttp.responseType = 'json';
-        xhttp.onload = function () {
-            window.location.href = 'http://www.ans.com';
-        };
-        xhttp.send(data);
+            var data = JSON.stringify({
+                action: "submit",
+                time: 0,
+                course: "<?php echo $this->course ?>"
+            });
+            xhttp.open("POST", "/write");
+            xhttp.setRequestHeader('Content-type', 'application/json');
+            xhttp.responseType = 'json';
+            xhttp.onload = function () {
+                window.location.href = 'http://www.ans.com';
+            };
+            xhttp.send(data);
+        }
     }
 
 </script>

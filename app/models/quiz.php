@@ -95,7 +95,7 @@ class quiz
         $user= substr_replace($user,'/',4,0);
 
         self::$conn = new dbconnect();
-        $sql="INSERT INTO `:course` (stu_id,score,time) VALUES (:id, 0,0)";
+        $sql="INSERT INTO `:course` (stu_id,score,time) VALUES (:id,0,-1)";
         $st = self::$conn->db->prepare($sql);
         $st->bindValue(":course",$course,\PDO::PARAM_INT);
         $st->bindValue(":id",$user);

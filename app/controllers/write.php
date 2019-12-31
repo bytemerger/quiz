@@ -119,11 +119,11 @@ class write
 
         switch ($stuTime['time'])
         {
-            case 0: echo json_encode($setTime['time']);
+            case -1: echo json_encode($setTime['time']*60);
             break;
-            case -1: $time=-1;echo json_encode($time);
+            case 0: $time=-1;echo json_encode($time);
             break;
-            default : echo json_encode($stuTime['time']-0.5);
+            default : echo json_encode($stuTime['time']-2);
         }
     }
     public function saveTime($course,$student,$time)
