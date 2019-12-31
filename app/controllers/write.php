@@ -28,6 +28,10 @@ class write
             case 'answerQ': $this->sendAnswer($_SESSION['student_id'],$input);
             break;
             case 'getScore': $this->checkResult($_SESSION['student_id'],$input['course']);
+            break;
+            case 'getTime': $this->getTime($input['course'],$_SESSION['student_id']);
+            break;
+            case 'saveTime': $this->saveTime($input['course'],$_SESSION['student_id'],$input['time']);
 
         }
     }
@@ -105,6 +109,24 @@ class write
         quiz::updateScore($id,$course,$score);
 
 
+    }
+    public function getTime($course,$id)
+    {
+        $setTime= quiz::getSet();
+        $stuTime = quiz::getStuTime($course,$id);
+
+        switch ($stuTime['time'])
+        {
+            case 0: echo json_encode($setTime['time']);
+            break;
+            case 'done': echo json_encode('done');
+            break;
+            default : echo json_encode($stuTime['time']);
+        }
+    }
+    public function saveTime($course,$student,$time)
+    {
+        quiz::saveTime($course,$student,$time);
     }
     public function submit()
     {

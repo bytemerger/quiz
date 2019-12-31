@@ -11,9 +11,7 @@
             <div>
                 <div id="del-countdown">
                     <div id="units">
-                        <span>Hours</span>
-                        <span>Minutes</span>
-                        <span>Seconds</span>
+
                     </div>
                 </div>
             </div>
@@ -48,6 +46,7 @@
     window.onload = function () {
         getAnswered();
         getNext(1);
+        getTime();
     };
     function getAnswered()
     {
@@ -171,4 +170,59 @@
         };
         xhttp.send(data);
     }
+    function getTime()
+    {
+        let xhttp;
+        xhttp = new XMLHttpRequest();
+
+        var data = JSON.stringify({
+            action:"getTime",
+            course:"<?php echo $this->course ?>"
+
+        });
+        xhttp.open("POST","/write");
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.responseType = 'json';
+        xhttp.onload = function () {
+            startTimer(xhttp.response)
+        };
+        xhttp.send(data);
+    }
+    function startTimer(duration) {
+        var timer = duration*60, minutes, seconds;
+
+        setInterval(function () {
+            minutes = parseInt(timer / 60,10);
+            seconds = parseInt(timer % 60,10);
+            console.log(minutes);
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            document.getElementById('del-countdown').textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                timer = duration;
+            }
+        }, 1000);
+        //update db on the time
+        setInterval(function () {
+            let xhttp;
+            xhttp = new XMLHttpRequest();
+
+            var data = JSON.stringify({
+                action:"saveTime",
+                time:minutes,
+                course:"<?php echo $this->course ?>"
+
+            });
+            xhttp.open("POST","/write");
+            xhttp.setRequestHeader('Content-type', 'application/json');
+            xhttp.responseType = 'json';
+            xhttp.onload = function () {
+            };
+            xhttp.send(data);
+        },60000)
+    }
+
+
 </script>

@@ -104,6 +104,8 @@ class quiz
 
     public static function updateScore($user,$course,$score)
     {
+        //this is to correct the 201221414(for tables) to 2012/21414
+        $user= substr_replace($user,'/',4,0);
         self::$conn = new dbconnect();
         $sql="UPDATE `:course` SET score =:score WHERE stu_id = :id";
         $st = self::$conn->db->prepare($sql);
@@ -112,6 +114,40 @@ class quiz
         $st->bindValue(":score",$score);
         $st->execute();
 
+    }
+
+    public static function getSet()
+    {
+        $sql="SELECT time from exam";
+        self::$conn = new dbconnect();
+        $stm= self::$conn->db->prepare($sql);
+        $stm->execute();
+        $result = $stm->fetch();
+
+        return $result;
+    }
+    public static function getStuTime($course,$id)
+    {
+        $sql="SELECT time from `:course` WHERE stu_id = :id";
+        self::$conn = new dbconnect();
+        $stm= self::$conn->db->prepare($sql);
+        $stm->bindValue(":course",$course,\PDO::PARAM_INT);
+        $stm->bindValue(":id",$id);
+        $stm->execute();
+        $result = $stm->fetch();
+
+        return $result;
+    }
+
+    public static function saveTime($course,$student,$time)
+    {
+        self::$conn = new dbconnect();
+        $sql="UPDATE `:course` SET time =:time WHERE stu_id = :id";
+        $st = self::$conn->db->prepare($sql);
+        $st->bindValue(":course",$course,\PDO::PARAM_INT);
+        $st->bindValue(":id",$student);
+        $st->bindValue(":time",$time);
+        $st->execute();
     }
 
 }
