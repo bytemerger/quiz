@@ -32,6 +32,8 @@ class write
             case 'getTime': $this->getTime($input['course'],$_SESSION['student_id']);
             break;
             case 'saveTime': $this->saveTime($input['course'],$_SESSION['student_id'],$input['time']);
+            break;
+            case 'submit': $this->submit($input['course'],$_SESSION['student_id'],$input['time']);
 
         }
     }
@@ -119,17 +121,18 @@ class write
         {
             case 0: echo json_encode($setTime['time']);
             break;
-            case 'done': echo json_encode('done');
+            case -1: $time=-1;echo json_encode($time);
             break;
-            default : echo json_encode($stuTime['time']);
+            default : echo json_encode($stuTime['time']-0.5);
         }
     }
     public function saveTime($course,$student,$time)
     {
         quiz::saveTime($course,$student,$time);
     }
-    public function submit()
+    public function submit($course,$student,$time)
     {
         //logout and stop exam
+        quiz::saveTime($course,$student,$time);
     }
 }

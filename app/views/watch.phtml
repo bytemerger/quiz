@@ -19,7 +19,8 @@
 
         ?>
         <td>
-            <?php echo $result['time']; ?>
+            <?php if ($result['time'] == -1)echo 'done';
+            else echo $result['time'] ; ?>
         </td>
         <?php
         echo '</tr>';

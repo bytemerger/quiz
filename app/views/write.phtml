@@ -14,6 +14,9 @@
 
                     </div>
                 </div>
+                <div>
+                    <button class="btn btn-success" onclick="submit()">submit</button>
+                </div>
             </div>
         </div>
         <div class="col-md-8">
@@ -184,7 +187,12 @@
         xhttp.setRequestHeader('Content-type', 'application/json');
         xhttp.responseType = 'json';
         xhttp.onload = function () {
-            startTimer(xhttp.response)
+            console.log(xhttp.response);
+            if (xhttp.response === -1){
+                alert('You are done with exams');
+                window.location.href = 'http://www.ans.com';
+            } else
+                startTimer(xhttp.response)
         };
         xhttp.send(data);
     }
@@ -205,7 +213,7 @@
             }
         }, 1000);
         //update db on the time
-        setInterval(function () {
+        window.updateTime =setInterval(function () {
             let xhttp;
             xhttp = new XMLHttpRequest();
 
@@ -223,6 +231,23 @@
             xhttp.send(data);
         },60000)
     }
+    function submit(){
+        clearInterval(updateTime)
+        let xhttp;
+        xhttp = new XMLHttpRequest();
 
+        var data = JSON.stringify({
+            action:"submit",
+            time:-1,
+            course:"<?php echo $this->course ?>"
+        });
+        xhttp.open("POST","/write");
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.responseType = 'json';
+        xhttp.onload = function () {
+            window.location.href = 'http://www.ans.com';
+        };
+        xhttp.send(data);
+    }
 
 </script>
